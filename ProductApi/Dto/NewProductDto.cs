@@ -7,6 +7,8 @@ namespace ProductApi.Dto
         [Required]
         public string? Name { get; init; }
         [Required]
+        public TypeOfProduct Type { get; init; }
+        [Required]
         [Range(1, Double.MaxValue)]
         public double Price { get; init; }
         [Required]

@@ -2,50 +2,40 @@
 {
     public class ProductService : IProductService
     {
-        List<Product> _products = new()
-        {
-            new Product { Id = 1,
-                Name = "Apple",
-                Price = 25,
-                Discount = 5,
-                CreatedDate = DateTimeOffset.UtcNow },
-            new Product { Id = 2,
-                Name = "Cheese",
-                Price = 90,
-                Discount = 0,
-                CreatedDate = DateTimeOffset.UtcNow },
-        };
+        List<Product> _products = new();
 
-        public void AddProduct(Product product)
+        public async Task AddProduct(Product product)
         {
             _products.Add(product);
         }
 
-        public Product GetProduct(int id)
+        public async Task<Product> GetProduct(int id)
         {
             Product? product = _products.Where(exsitingProduct => exsitingProduct.Id == id).SingleOrDefault();
             return product;
         }
 
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
             return _products;
         }
 
-        public void RemoveProduct(int id)
+        public async Task RemoveProduct(int id)
         {
             var index = _products.FindIndex(product => product.Id == id);
             _products.RemoveAt(index);
         }
 
-        public void UpdateProduct(int id, Product required)
+        public async Task UpdateProduct(int id, Product required)
         {
             var index = _products.FindIndex(product => product.Id == id);
             _products[index] = _products[index] with
             {
                 Name = required.Name,
+                Type = required.Type,
                 Price = required.Price,
-                Discount = required.Discount
+                Discount = required.Discount,
+                TotalPrice = required.TotalPrice
             };
         }
 

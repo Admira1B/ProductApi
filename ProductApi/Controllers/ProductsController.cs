@@ -12,15 +12,15 @@ namespace ProductApi.Controllers
         public ProductsController(IProductService products) { _productsCollection = products; }
 
         [HttpGet]
-        public ActionResult<List<ProductDto>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
-            return Ok(_productsCollection.GetProducts().Select(product => product.AsProductDto()));
+            return Ok((await _productsCollection.GetProducts()).Select(product => product.AsProductDto()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ProductDto> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            var product = _productsCollection.GetProduct(id);
+            var product = await _productsCollection.GetProduct(id);
 
             if (product is null)
                 return NotFound();
@@ -29,45 +29,54 @@ namespace ProductApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
-            var exsitingProduct = _productsCollection.GetProduct(id);
+            var exsitingProduct = await _productsCollection.GetProduct(id);
 
             if (exsitingProduct is null)
                 return NotFound();
 
-            _productsCollection.RemoveProduct(id);
+            await _productsCollection.RemoveProduct(id);
 
             return NoContent();
         }
 
         [HttpPost]
-        public ActionResult CreateProduct(NewProductDto productDto)
+        public async Task<ActionResult> CreateProduct(NewProductDto productDto)
         {
             Product product = new()
             {
                 Id = _productsCollection.GetNewId(),
                 Name = productDto.Name,
+                Type = productDto.Type,
                 Price = productDto.Price,
                 Discount= productDto.Discount,
+                TotalPrice = productDto.Price - (productDto.Price * productDto.Discount/100),
                 CreatedDate = DateTimeOffset.UtcNow
-            }; 
+            };
 
-            _productsCollection.AddProduct(product);
+            await _productsCollection.AddProduct(product);
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ProductDto> UpdateProduct(int id, UpdateProductDto productDto)
+        public async Task<ActionResult<ProductDto>> UpdateProduct(int id, UpdateProductDto productDto)
         {
-            var exsitingProduct = _productsCollection.GetProduct(id);
+            var exsitingProduct = await _productsCollection.GetProduct(id);
             if (exsitingProduct is null)
                 return NotFound();
 
-            var updatedProduct = exsitingProduct with { Name = productDto.Name, Price = productDto.Discount, Discount = productDto.Discount };
+            var updatedProduct = exsitingProduct with 
+            {
+                Name = productDto.Name,
+                Type = productDto.Type,
+                Price = productDto.Discount,
+                Discount = productDto.Discount,
+                TotalPrice = productDto.Price - (productDto.Price * productDto.Discount / 100)
+            };
 
-            _productsCollection.UpdateProduct(id, updatedProduct);
+            await _productsCollection.UpdateProduct(id, updatedProduct);
 
             return Ok(updatedProduct.AsProductDto());
         }

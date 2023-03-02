@@ -3,12 +3,11 @@ namespace ProductApi.Service
 {
     public interface IProductService
     {
-        List<Product> GetProducts();
-        Product GetProduct(int id);
-        void AddProduct(Product product);
-        void RemoveProduct(int id);
-        void UpdateProduct(int id, Product required);
-        int GetNewId();
-
+        Task<List<Product>> GetProducts();
+        Task<Product> GetProduct(int id);
+        Task AddProduct(Product product);
+        Task RemoveProduct(int id);
+        Task UpdateProduct(int id, Product required);
+        Task<int> GetNewId();
     }
 }
