@@ -2,15 +2,12 @@
 
 namespace ProductApi.Dto
 {
-    public class NewProductDto
+    public class ProductDto
     {
-        [Required]
+        public int Id { get; init; }
         public string? Name { get; init; }
-        [Required]
-        [Range(1, Double.MaxValue)]
         public double Price { get; init; }
-        [Required]
-        [Range(0, 99.9)]
         public double Discount { get; init; }
+        public DateTimeOffset CreatedDate { get; init; }
     }
 }

@@ -6,8 +6,8 @@
         {
             new Product { Id = 1,
                 Name = "Apple",
-                Price = 15,
-                Discount = 0,
+                Price = 25,
+                Discount = 5,
                 CreatedDate = DateTimeOffset.UtcNow },
             new Product { Id = 2,
                 Name = "Cheese",
@@ -47,6 +47,11 @@
                 Price = required.Price,
                 Discount = required.Discount
             };
+        }
+
+        public int GetNewId()
+        {
+            return _products.Count + 1;
         }
     }
 }

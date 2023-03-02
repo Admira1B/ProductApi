@@ -8,6 +8,7 @@ namespace ProductApi.Service
         void AddProduct(Product product);
         void RemoveProduct(int id);
         void UpdateProduct(int id, Product required);
+        int GetNewId();
 
     }
 }

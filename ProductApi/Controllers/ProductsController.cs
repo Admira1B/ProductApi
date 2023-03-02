@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductApi.Dto;
 using ProductApi.Service;
 
 namespace ProductApi.Controllers
@@ -11,20 +12,20 @@ namespace ProductApi.Controllers
         public ProductsController(IProductService products) { _productsCollection = products; }
 
         [HttpGet]
-        public ActionResult<List<Product>> GetProducts()
+        public ActionResult<List<ProductDto>> GetProducts()
         {
-            return Ok(_productsCollection.GetProducts());
+            return Ok(_productsCollection.GetProducts().Select(product => product.AsProductDto()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(int id)
+        public ActionResult<ProductDto> GetProduct(int id)
         {
             var product = _productsCollection.GetProduct(id);
 
             if (product is null)
                 return NotFound();
 
-            return Ok(product);
+            return Ok(product.AsProductDto());
         }
 
         [HttpDelete("{id}")]
@@ -41,23 +42,34 @@ namespace ProductApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateProduct(Product product)
+        public ActionResult CreateProduct(NewProductDto productDto)
         {
+            Product product = new()
+            {
+                Id = _productsCollection.GetNewId(),
+                Name = productDto.Name,
+                Price = productDto.Price,
+                Discount= productDto.Discount,
+                CreatedDate = DateTimeOffset.UtcNow
+            }; 
+
             _productsCollection.AddProduct(product);
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Product> UpdateProduct(int id, Product product)
+        public ActionResult<ProductDto> UpdateProduct(int id, UpdateProductDto productDto)
         {
             var exsitingProduct = _productsCollection.GetProduct(id);
             if (exsitingProduct is null)
                 return NotFound();
 
-            _productsCollection.UpdateProduct(id, product);
+            var updatedProduct = exsitingProduct with { Name = productDto.Name, Price = productDto.Discount, Discount = productDto.Discount };
 
-            return NoContent();
+            _productsCollection.UpdateProduct(id, updatedProduct);
+
+            return Ok(updatedProduct.AsProductDto());
         }
     }
 }
