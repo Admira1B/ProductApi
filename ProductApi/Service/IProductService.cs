@@ -1,13 +1,12 @@
-﻿
-namespace ProductApi.Service
+﻿namespace ProductApi.Service
 {
     public interface IProductService
     {
-        Task<List<Product>> GetProducts();
-        Task<Product> GetProduct(int id);
-        Task AddProduct(Product product);
+        Task<List<ProductDto>> GetProducts();
+        Task<ProductDto> GetProduct(int id);
+        Task AddProduct(NewProductDto productDto);
         Task RemoveProduct(int id);
-        Task UpdateProduct(int id, Product required);
-        Task<int> GetNewId();
+        Task UpdateProduct(int id, UpdateProductDto required);
+        int GetNewId();
     }
 }

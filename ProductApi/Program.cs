@@ -1,5 +1,10 @@
 global using ProductApi.Models;
-using ProductApi.Service;
+global using ProductApi.Service;
+global using ProductApi.Dto;
+global using ProductApi.Data;
+global using AutoMapper;
+global using Microsoft.EntityFrameworkCore;
+
 
 namespace ProductApi
 {
@@ -9,6 +14,9 @@ namespace ProductApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+            builder.Services.AddDbContext<DataContext>(options => 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddSingleton<IProductService, ProductService>();
 
             builder.Services.AddControllers();

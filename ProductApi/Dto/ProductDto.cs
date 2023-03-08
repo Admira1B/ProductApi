@@ -4,12 +4,12 @@ namespace ProductApi.Dto
 {
     public class ProductDto
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
-        public TypeOfProduct Type { get; init; }
-        public double Price { get; init; }
-        public double Discount { get; init; }
-        public double TotalPrice { get; init; }
-        public DateTimeOffset CreatedDate { get; init; }
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+        public TypeOfProduct Type { get; set; }
+        public double Price { get; set; }
+        public double Discount { get; set; }
+        public double TotalPrice { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
     }
 }

@@ -5,15 +5,15 @@ namespace ProductApi.Dto
     public class UpdateProductDto
     {
         [Required]
-        public string? Name { get; init; }
+        public string? Name { get; set; }
         [Required]
-        public TypeOfProduct Type { get; init; }
+        public TypeOfProduct Type { get; set; }
 
         [Required]
         [Range(1, Double.MaxValue)]
-        public double Price { get; init; }
+        public double Price { get; set; }
         [Required]
         [Range(0, 99.9)]
-        public double Discount { get; init; }
+        public double Discount { get; set; }
     }
 }
