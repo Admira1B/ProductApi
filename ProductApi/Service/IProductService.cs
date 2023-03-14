@@ -7,6 +7,5 @@
         Task AddProduct(NewProductDto productDto);
         Task RemoveProduct(int id);
         Task UpdateProduct(int id, UpdateProductDto required);
-        int GetNewId();
     }
 }

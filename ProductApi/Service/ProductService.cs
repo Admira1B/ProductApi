@@ -5,23 +5,27 @@ namespace ProductApi.Service
     {
         private readonly List<Product> _products;
         private readonly IMapper _mapper;
+        private readonly DataContext _context;
 
-        public ProductService(IMapper mapper)
+        public ProductService(IMapper mapper, DataContext dbContext)
         {
             _mapper = mapper;
+            _context = dbContext;
             _products = new();
 
         }
 
         public async Task<ProductDto> GetProduct(int id)
         {
-            Product? product = _products.Where(exsitingProduct => exsitingProduct.Id == id).SingleOrDefault();
-            return _mapper.Map<ProductDto>(product);
+            var dbProduct = await _context.Products.FirstOrDefaultAsync(exsitingProduct => exsitingProduct.Id == id);
+
+            return _mapper.Map<ProductDto>(dbProduct);
         }
 
         public async Task<List<ProductDto>> GetProducts()
         {
-             return _products.Select(product => _mapper.Map<ProductDto>(product)).ToList();
+            var dbProducts = await _context.Products.ToListAsync();
+             return dbProducts.Select(product => _mapper.Map<ProductDto>(product)).ToList();
         }
 
         public async Task AddProduct(NewProductDto productDto)
@@ -46,11 +50,6 @@ namespace ProductApi.Service
         {
             var index = _products.FindIndex(product => product.Id == id);
             _products.RemoveAt(index);
-        }
-
-        public int GetNewId()
-        {
-            return _products.Count + 1;
         }
     }
 }
