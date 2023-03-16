@@ -7,8 +7,6 @@
             CreateMap<Product, ProductDto>().ReverseMap();
 
             CreateMap<NewProductDto, Product>().
-                ForMember(destination => destination.Id,
-                    option => option.MapFrom(required => IdGenerator.GetNewId())).
                 ForMember(destination => destination.TotalPrice,
                     option => option.MapFrom(required => required.Price - (required.Price * required.Discount / 100))).
                 ForMember(destination => destination.CreatedDate,

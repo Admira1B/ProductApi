@@ -14,10 +14,10 @@ namespace ProductApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddAutoMapper(typeof(Program).Assembly);
-            builder.Services.AddDbContext<DataContext>(options => 
+            builder.Services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddSingleton<IProductService, ProductService>();
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -35,7 +35,6 @@ namespace ProductApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

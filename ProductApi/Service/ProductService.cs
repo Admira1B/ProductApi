@@ -3,7 +3,6 @@ namespace ProductApi.Service
 {
     public class ProductService : IProductService
     {
-        private readonly List<Product> _products;
         private readonly IMapper _mapper;
         private readonly DataContext _context;
 
@@ -11,13 +10,11 @@ namespace ProductApi.Service
         {
             _mapper = mapper;
             _context = dbContext;
-            _products = new();
-
         }
 
         public async Task<ProductDto> GetProduct(int id)
         {
-            var dbProduct = await _context.Products.FirstOrDefaultAsync(exsitingProduct => exsitingProduct.Id == id);
+            var dbProduct = await _context.Products.FindAsync(id);
 
             return _mapper.Map<ProductDto>(dbProduct);
         }
@@ -32,24 +29,28 @@ namespace ProductApi.Service
         {
             var product = _mapper.Map<Product>(productDto);
 
-            _products.Add(product);
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateProduct(int id, UpdateProductDto required)
         {
-            var index = _products.FindIndex(product => product.Id == id);
+            var product = await _context.Products.FindAsync(id);
 
-            DateTimeOffset createdDate = _products[index].CreatedDate;
-            _products[index] = _mapper.Map<Product>(required);
+            product.Name = required.Name;
+            product.Price = required.Price;
+            product.Discount= required.Discount;
+            product.Type = required.Type;
+            product.TotalPrice = required.Price - (required.Price * required.Discount / 100);
 
-            _products[index].Id = id;
-            _products[index].CreatedDate = createdDate;
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveProduct(int id)
         {
-            var index = _products.FindIndex(product => product.Id == id);
-            _products.RemoveAt(index);
+            var product = await _context.Products.FindAsync(id);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

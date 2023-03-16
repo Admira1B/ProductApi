@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductApi.Dto;
 
 namespace ProductApi.Controllers
 {
